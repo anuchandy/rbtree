@@ -1102,6 +1102,129 @@ func TestDelet7(t *testing.T) {
   assertKey(t, rbTree.RBRoot.Node.Left.Right.Right.Right.Parent, 30)
  }
 
+func TestDelet8(t *testing.T) {
+  rbTree := getTestRBTree8(t)
+  //
+  //                  50B
+  //                 /    \
+  //                /      \
+  //               /        \
+  //             20R        70B
+  //             /  \      /  \
+  //            /    \    /    \
+  //          10B    30B 60B   75B
+  //          /  \   / \
+  //        05B 13B 25B 35B
+
+  // If we delete 25B the case is 2.2.2
+  // 1. Parent is BLACK node 'a' [30B]
+  // 2. If the other child of 'a' is BLACK 'b' [35B]
+  // 3. If 'b' has no RED child [35B has no RED child]
+
+  // After the deletion of 25B tree looks like below [intermediate state]
+
+  //                  50B
+  //                 /    \
+  //                /      \
+  //               /        \
+  //             20R         70B
+  //             /  \        /  \
+  //            /    \      /    \
+  //          10B     30B   60B   75B
+  //          /  \    / \
+  //        05B 13B  /\  35R
+  //                /_ \
+  //               h ->h-1
+
+  // In this case BLACK depth of external nodes of 30B reduced by one (3 to 2) for other
+  // parts of the tree it is still 3
+  // This became case 1.2
+
+  // 1. Parent is RED node 'a' [20B]
+  // 2. The other child of 'b' must be BLACK, child 'b' [10B]
+  // 3. 'b' has no RED child (both 05 and 13 are BLACK)
+
+  // There is one rotation
+  node25 := rbTree.SearchNode(25)
+  assertKey(t, node25, 25)
+  assertLeaf(t, node25)
+  rbTree.DeleteNode(node25)
+  validate(t, rbTree)
+
+  // Simple recolouring will fix ( 20R -> 20B, 10B -> 10R)
+  //                  50B
+  //                 /    \
+  //                /      \
+  //               /        \
+  //             20B         70B
+  //             /  \        /  \
+  //            /    \      /    \
+  //          10R     30B   60B   75B
+  //          /  \    / \
+  //        05B 13B  /\  35R
+  //                /_ \
+  //               h ->h-1
+
+  // Level 0 (no change)
+  assertKey(t, rbTree.RBRoot.Node, 50)
+  assertBlack(t, rbTree.RBRoot.Node)
+
+  // Level 1
+  assertKey(t, rbTree.RBRoot.Node.Left, 20)
+  assertBlack(t, rbTree.RBRoot.Node.Left)
+  assertKey(t, rbTree.RBRoot.Node.Right,70) // (no change)
+  assertBlack(t, rbTree.RBRoot.Node.Right)
+
+  // Level 2
+  assertKey(t, rbTree.RBRoot.Node.Left.Left, 10)
+  assertRed(t, rbTree.RBRoot.Node.Left.Left)
+  assertKey(t, rbTree.RBRoot.Node.Left.Right, 30)
+  assertBlack(t, rbTree.RBRoot.Node.Left.Right)
+  assertKey(t, rbTree.RBRoot.Node.Right.Left,60)
+  assertBlack(t, rbTree.RBRoot.Node.Right.Left)
+  assertKey(t, rbTree.RBRoot.Node.Right.Right, 75)
+  assertBlack(t, rbTree.RBRoot.Node.Right.Right)
+
+  // Level 3
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Left, 5)
+  assertBlack(t, rbTree.RBRoot.Node.Left.Left.Left)
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Right, 13)
+  assertBlack(t, rbTree.RBRoot.Node.Left.Left.Right)
+  assertKey(t, rbTree.RBRoot.Node.Left.Right.Right, 35)
+  assertRed(t, rbTree.RBRoot.Node.Left.Right.Right)
+
+  //                  50B
+  //                 /    \
+  //                /      \
+  //               /        \
+  //             20B         70B
+  //             /  \        /  \
+  //            /    \      /    \
+  //          10R     30B   60B   75B
+  //          /  \    / \
+  //        05B 13B  /\  35R
+  //                /_ \
+  //               h ->h-1
+
+  // Assert leaves
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Left.Left)          // 5
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Left.Right)         // 13
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Right.Right)        // 35
+  assertLeaf(t, rbTree.RBRoot.Node.Right.Left)              // 60
+  assertLeaf(t, rbTree.RBRoot.Node.Right.Right)             // 75
+
+  // Assert parents
+  assertKey(t, rbTree.RBRoot.Node.Left.Parent, 50)
+  assertKey(t, rbTree.RBRoot.Node.Right.Parent, 50)
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Parent, 20)
+  assertKey(t, rbTree.RBRoot.Node.Left.Right.Parent, 20)
+  assertKey(t, rbTree.RBRoot.Node.Right.Left.Parent, 70)
+  assertKey(t, rbTree.RBRoot.Node.Right.Right.Parent, 70)
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Left.Parent, 10)
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Right.Parent, 10)
+  assertKey(t, rbTree.RBRoot.Node.Left.Right.Right.Parent, 30)
+ }
+
 //function 'getTestRBTree1' returns below tree
 //
 //                  50B
@@ -1540,6 +1663,65 @@ func getTestRBTree7(t *testing.T) *rbtree.RBTree {
   rbTree.RBRoot.Node.Left.Left.Left.Right = rbtree.CreateNewRBNode(6, 6)
   rbTree.RBRoot.Node.Left.Left.Left.Right.Color = true
   rbTree.RBRoot.Node.Left.Left.Left.Right.Parent = rbTree.RBRoot.Node.Left.Left.Left
+
+  validate(t, rbTree)
+  return rbTree
+}
+
+//function 'getTestRBTree7' returns below tree
+//
+//                  50B
+//                 /    \
+//                /      \
+//               /        \
+//             20R        70B
+//             /  \      /  \
+//            /    \    /    \
+//          10B    30B 60B   75B
+//          /  \   / \
+//        05B 13B 25B 35B
+//
+func getTestRBTree8(t *testing.T) *rbtree.RBTree {
+  // Level 0 [50B]
+  rbTree := rbtree.CreateNewRBTree(IntKeyComparator)
+  rbTree.RBRoot.Node = rbtree.CreateNewRBNode(50, 50)
+  rbTree.RBRoot.Node.Color = true
+  rbTree.RBRoot.Node.Parent = nil
+
+  // Level 1 [20R 70B]
+  rbTree.RBRoot.Node.Left = rbtree.CreateNewRBNode(20, 20)
+  rbTree.RBRoot.Node.Left.Parent = rbTree.RBRoot.Node
+  rbTree.RBRoot.Node.Right = rbtree.CreateNewRBNode(70, 70)
+  rbTree.RBRoot.Node.Right.Color = true
+  rbTree.RBRoot.Node.Right.Parent = rbTree.RBRoot.Node
+
+  // Level 2 [10B 30B 60B 75B]
+  rbTree.RBRoot.Node.Left.Left  = rbtree.CreateNewRBNode(10, 10)
+  rbTree.RBRoot.Node.Left.Left.Color = true
+  rbTree.RBRoot.Node.Left.Left.Parent = rbTree.RBRoot.Node.Left
+  rbTree.RBRoot.Node.Left.Right  = rbtree.CreateNewRBNode(30, 30)
+  rbTree.RBRoot.Node.Left.Right.Color = true
+  rbTree.RBRoot.Node.Left.Right.Parent = rbTree.RBRoot.Node.Left
+  rbTree.RBRoot.Node.Right.Left = rbtree.CreateNewRBNode(60, 60)
+  rbTree.RBRoot.Node.Right.Left.Color = true
+  rbTree.RBRoot.Node.Right.Left.Parent = rbTree.RBRoot.Node.Right
+  rbTree.RBRoot.Node.Right.Right = rbtree.CreateNewRBNode(75, 75)
+  rbTree.RBRoot.Node.Right.Right.Color = true
+  rbTree.RBRoot.Node.Right.Right.Parent = rbTree.RBRoot.Node.Right
+
+  // Level 3 [5B 13B 25B 35B]
+  rbTree.RBRoot.Node.Left.Left.Left = rbtree.CreateNewRBNode(5, 5)
+  rbTree.RBRoot.Node.Left.Left.Left.Color = true
+  rbTree.RBRoot.Node.Left.Left.Left.Parent = rbTree.RBRoot.Node.Left.Left
+  rbTree.RBRoot.Node.Left.Left.Right = rbtree.CreateNewRBNode(13, 13)
+  rbTree.RBRoot.Node.Left.Left.Right.Color = true
+  rbTree.RBRoot.Node.Left.Left.Right.Parent = rbTree.RBRoot.Node.Left.Left
+  rbTree.RBRoot.Node.Left.Right.Left = rbtree.CreateNewRBNode(25, 25)
+  rbTree.RBRoot.Node.Left.Right.Left.Color = true
+  rbTree.RBRoot.Node.Left.Right.Left.Parent = rbTree.RBRoot.Node.Left.Right
+  rbTree.RBRoot.Node.Left.Right.Right = rbtree.CreateNewRBNode(35, 35)
+  rbTree.RBRoot.Node.Left.Right.Right.Color = true
+  rbTree.RBRoot.Node.Left.Right.Right.Parent = rbTree.RBRoot.Node.Left.Right
 
   validate(t, rbTree)
   return rbTree
