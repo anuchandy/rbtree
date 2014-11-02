@@ -144,7 +144,7 @@ func CreateNewRBNode(key interface{}, value interface{}) *RBNode {
   return newNode
 }
 
-// Search for RBNode with the given give and return the node
+// Search for RBNode with the given key and return the node
 // if exists else nil.
 //
 func (rbTree *RBTree) SearchNode(key interface{}) *RBNode {
