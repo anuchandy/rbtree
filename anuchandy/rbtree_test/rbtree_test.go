@@ -535,7 +535,7 @@ func TestDelete3(t *testing.T) {
 
   // 1. Parent is BLACK node 'a' [50B]
   // 2. The other child of 'a' is BLACK, child 'b' [20R]
-  // 3. One child, here right child of 'b' is RED 'c' [30R]
+  // 3.One child (or both), here right child of 'b' is RED 'c' [30R]
   
   // 'c' is RED right child - so there is two rotations
 
@@ -620,6 +620,114 @@ func TestDelete3(t *testing.T) {
   assertKey(t, rbTree.RBRoot.Node.Left.Left.Left.Parent, 10)
   assertKey(t, rbTree.RBRoot.Node.Left.Left.Right.Parent, 10)
   assertKey(t, rbTree.RBRoot.Node.Right.Right.Right.Parent, 70)
+}
+
+func TestDelete4(t *testing.T) {
+  rbTree := getTestRBTree4(t)
+  //
+  //                  50B
+  //                 /    \
+  //                /      \
+  //               /        \
+  //             20B        70B
+  //             /  \      /  \
+  //            /    \    /    \
+  //          10R    30B 60B   75B
+  //          /  \   / \
+  //        05B 13B 25R 35R
+
+  // If we delete 75B the case is 2.2.2
+  // 1. Parent is BLACK node 'a' [70B]
+  // 2. If the other child of 'a' is BLACK 'b' [60B]
+  // 3. If 'b' has no RED child [60B has no RED child]
+
+  // After the deletion of 75B tree looks like below [intermediate state]
+
+  //                  50B
+  //                 /    \
+  //                /      \
+  //               /        \
+  //             20B        70B
+  //             /  \      /  \
+  //            /    \    /   /\
+  //          10R    30B 60R / _\
+  //          /  \   / \     h to h-1
+  //        05B 13B 25R 35R
+
+  // In this case BLACK depth of external nodes of 70B reduced by one (3 to 2) for other
+  // parts of the tree it is still 3
+  // This became case 2.2.1
+
+  // 1. Parent is BLACK node 'a' [50B]
+  // 2. The other child of 'a' is BLACK, child 'b' [20B]
+  // 3. One child (or both), here left child of 'b' is RED 'c' [10R]
+
+  // 'c' is RED left child - so there is one rotation
+  node75 := rbTree.SearchNode(75)
+  assertKey(t, node75, 75)
+  assertLeaf(t, node75)
+  rbTree.DeleteNode(node75)
+  validate(t, rbTree)
+
+  //  Rotate 'a' (50B) right [ First and last rotation ]
+  //                  20B
+  //                 /    \
+  //                /      \
+  //               /        \
+  //             10B        50B
+  //             /  \       /    \
+  //            /    \     /      \
+  //          05B    13B  30B      70B
+  //                     /  \      /  \
+  //                    /    \    /   /\
+  //                   25R   35R 60R /_ \ h to h-1
+
+  // Level 0
+  assertKey(t, rbTree.RBRoot.Node, 20)
+  assertBlack(t, rbTree.RBRoot.Node)
+
+  // Level 1
+  assertKey(t, rbTree.RBRoot.Node.Left, 10)
+  assertBlack(t, rbTree.RBRoot.Node.Left)
+  assertKey(t, rbTree.RBRoot.Node.Right, 50)
+  assertBlack(t, rbTree.RBRoot.Node.Right)
+
+  // Level 2
+  assertKey(t, rbTree.RBRoot.Node.Left.Left, 5)
+  assertBlack(t, rbTree.RBRoot.Node.Left.Left)
+  assertKey(t, rbTree.RBRoot.Node.Left.Right, 13)
+  assertBlack(t, rbTree.RBRoot.Node.Left.Right)
+  assertKey(t, rbTree.RBRoot.Node.Right.Left, 30)
+  assertBlack(t, rbTree.RBRoot.Node.Right.Left)
+  assertKey(t, rbTree.RBRoot.Node.Right.Right, 70)
+  assertBlack(t, rbTree.RBRoot.Node.Right.Right)
+
+  // Level 3
+  assertKey(t, rbTree.RBRoot.Node.Right.Left.Left, 25)
+  assertRed(t, rbTree.RBRoot.Node.Right.Left.Left)
+  assertKey(t, rbTree.RBRoot.Node.Right.Left.Right, 35)
+  assertRed(t, rbTree.RBRoot.Node.Right.Left.Right)
+  assertKey(t, rbTree.RBRoot.Node.Right.Right.Left, 60)
+  assertRed(t, rbTree.RBRoot.Node.Right.Right.Left)
+
+  // Assert leaves
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Left)       // 5
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Right)      // 13
+  assertLeaf(t, rbTree.RBRoot.Node.Right.Left.Left) // 25
+  assertLeaf(t, rbTree.RBRoot.Node.Right.Left.Right)// 35
+  assertLeaf(t, rbTree.RBRoot.Node.Right.Right.Left)// 60
+
+  // Assert parents
+  assertKey(t, rbTree.RBRoot.Node.Left.Parent, 20)
+  assertKey(t, rbTree.RBRoot.Node.Right.Parent, 20)
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Parent, 10)
+  assertKey(t, rbTree.RBRoot.Node.Left.Right.Parent, 10)
+  assertKey(t, rbTree.RBRoot.Node.Right.Left.Parent, 50)
+  assertKey(t, rbTree.RBRoot.Node.Right.Right.Parent, 50)
+
+  assertKey(t, rbTree.RBRoot.Node.Right.Left.Left.Parent, 30)
+  assertKey(t, rbTree.RBRoot.Node.Right.Left.Right.Parent, 30)
+  assertKey(t, rbTree.RBRoot.Node.Right.Right.Left.Parent, 70)
 }
 
 //function 'getTestRBTree1' returns below tree
