@@ -17,170 +17,87 @@ func TestInsert(t *testing.T) {
   // algorithm is supposed to align the resulting tree.
 
   // Level 0
-  if rbTree.RBRoot.Node.Color != true {
-    t.Error ("RBRoot.Node must be BLACK", )
-  }
-  
-  if rbTree.RBRoot.Node.Key.(int) != 11 {
-    t.Error ("RBRoot.Node key must be 11", )
-  }
 
+  // rbTree.RBRoot.Node.Color
+  assertBlack(t, rbTree.RBRoot.Node)
+  // rbTree.RBRoot.Node.Key
+  assertKey(t, rbTree.RBRoot.Node, 11)
+
+  
   // Level 1
-  if rbTree.RBRoot.Node.Left.Color != true {
-    t.Error ("RBRoot.Node.Left node must be BLACK", )
-  }
- 
-  if rbTree.RBRoot.Node.Left.Key.(int) != 7 {
-    t.Error ("RBRoot.Node.Left key must be 7", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Color != true {
-    t.Error ("RBRoot.Node.Right must be BLACK", )
-  }
- 
-  if rbTree.RBRoot.Node.Right.Key.(int) != 13 {
-    t.Error ("RBRoot.Node.Right key must be 13", )
-  }
 
+  // rbTree.RBRoot.Node.Left.Color
+  assertBlack(t, rbTree.RBRoot.Node.Left)
+  // rbTree.RBRoot.Node.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Left, 7)
+  // rbTree.RBRoot.Node.Right.Color
+  assertBlack(t, rbTree.RBRoot.Node.Right)
+  // rbTree.RBRoot.Node.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Right, 13)
+  
   // Level 2
-  if rbTree.RBRoot.Node.Left.Left.Color != false {
-    t.Error ("RBRoot.Node.Left.Left must be RED", )
-  }
- 
-  if rbTree.RBRoot.Node.Left.Left.Key.(int) != 5 {
-    t.Error ("RBRoot.Node.Left.Left key must be 5", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Right.Color != false {
-    t.Error ("BRoot.Node.Left.Right must be RED", )
-  }
- 
-  if rbTree.RBRoot.Node.Left.Right.Key.(int) != 9 {
-    t.Error ("BRoot.Node.Left.Right key must be 9", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Left.Color != true {
-    t.Error ("RBRoot.Node.Right.Left node must be BLACK", )
-  }
- 
-  if rbTree.RBRoot.Node.Right.Left.Key.(int) != 12 {
-    t.Error ("RBRoot.Node.Right.Left key must be 12", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Color != true {
-    t.Error ("RBRoot.Node.Right.Right node must be BLACK", )
-  }
- 
-  if rbTree.RBRoot.Node.Right.Right.Key.(int) != 15 {
-    t.Error ("RBRoot.Node.Left.Right key must be 15", )
-  }
+
+  // rbTree.RBRoot.Node.Left.Left.Color
+  assertRed(t, rbTree.RBRoot.Node.Left.Left)
+  // rbTree.RBRoot.Node.Left.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Left.Left, 5)
+  // rbTree.RBRoot.Node.Left.Right.Color
+  assertRed(t, rbTree.RBRoot.Node.Left.Right)
+  // rbTree.RBRoot.Node.Left.Right.Key
+  assertKey(t, rbTree.RBRoot.Node.Left.Right, 9)
+  // rbTree.RBRoot.Node.Right.Left.Color
+  assertBlack(t, rbTree.RBRoot.Node.Right.Left)
+  // rbTree.RBRoot.Node.Right.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Right.Left, 12)
+  // rbTree.RBRoot.Node.Right.Right.Color
+  assertBlack(t, rbTree.RBRoot.Node.Right.Right)
+  // rbTree.RBRoot.Node.Right.Right.Key
+  assertKey(t, rbTree.RBRoot.Node.Right.Right, 15)
   
   // Level 3
-  if rbTree.RBRoot.Node.Left.Left.Left.Color != true {
-    t.Error ("RBRoot.Node.Left.Left.Left must be BLACK", )
-  }
- 
-  if rbTree.RBRoot.Node.Left.Left.Left.Key.(int) != 4 {
-    t.Error ("RBRoot.Node.Left.Left.Left key must be 4", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Left.Right.Color != true {
-    t.Error ("RBRoot.Node.Left.Left.Right must be BLACK", )
-  }  
- 
-  if rbTree.RBRoot.Node.Left.Left.Right.Key.(int) != 6 {
-    t.Error ("RBRoot.Node.Left.Left.Right key must be 6", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Right.Left.Color != true {
-    t.Error ("RBRoot.Node.Left.Right.Left must be BLACK", )
-  }
- 
-  if rbTree.RBRoot.Node.Left.Right.Left.Key.(int) != 8 {
-    t.Error ("RBRoot.Node.Left.Right.Left key must be 8", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Right.Right.Color != true {
-    t.Error ("RBRoot.Node.Left.Right.Right must be BLACK", )
-  }
- 
-  if rbTree.RBRoot.Node.Left.Right.Right.Key.(int) != 10 {
-    t.Error ("RBRoot.Node.Left.Right.Right key must be 10", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Left.Color != false {
-    t.Error ("RBRoot.Node.Right.Right.Left node must be RED", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Left.Key.(int) != 14 {
-    t.Error ("RBRoot.Node.Right.Right.Left key must be 14", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Right.Color != false {
-    t.Error ("RBRoot.Node.Right.Right.Right node must be RED", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Right.Key.(int) != 16 {
-    t.Error ("RBRoot.Node.Right.Right.Right key must be 16", )
-  }
-  
-  // Level 4
-  if rbTree.RBRoot.Node.Left.Left.Left.Left.Color != false {
-    t.Error ("RBRoot.Node.Left.Left.Left.Left must be RED", )
-  }
- 
-  if rbTree.RBRoot.Node.Left.Left.Left.Left.Key.(int) != 3 {
-    t.Error ("RBRoot.Node.Left.Left.Left.Left key must be 3", )
-  }
+
+  // rbTree.RBRoot.Node.Right.Right.Color
+  assertBlack(t, rbTree.RBRoot.Node.Left.Left.Left)
+  // rbTree.RBRoot.Node.Left.Left.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Left, 4)
+  // rbTree.RBRoot.Node.Left.Left.Right.Color
+  assertBlack(t, rbTree.RBRoot.Node.Left.Left.Right)
+  // rbTree.RBRoot.Node.Left.Left.Right.Key
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Right, 6)
+  // rbTree.RBRoot.Node.Left.Right.Left.Color
+  assertBlack(t, rbTree.RBRoot.Node.Left.Right.Left)
+  // rbTree.RBRoot.Node.Left.Right.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Left.Right.Left, 8)
+  // rbTree.RBRoot.Node.Left.Right.Right.Color
+  assertBlack(t, rbTree.RBRoot.Node.Left.Right.Right)
+  // rbTree.RBRoot.Node.Left.Right.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Left.Right.Right, 10)
+  // rbTree.RBRoot.Node.Right.Right.Left.Color
+  assertRed(t, rbTree.RBRoot.Node.Right.Right.Left)
+  // rbTree.RBRoot.Node.Right.Right.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Right.Right.Left, 14)
+  // rbTree.RBRoot.Node.Right.Right.Right.Color
+  assertRed(t, rbTree.RBRoot.Node.Right.Right.Right)
+  // rbTree.RBRoot.Node.Right.Right.Right.Key
+  assertKey(t, rbTree.RBRoot.Node.Right.Right.Right, 16)
+  // rbTree.RBRoot.Node.Left.Left.Left.Left.Color
+  assertRed(t, rbTree.RBRoot.Node.Left.Left.Left.Left)
+  // rbTree.RBRoot.Node.Left.Left.Left.Left.Key
+  assertKey(t, rbTree.RBRoot.Node.Left.Left.Left.Left, 3)
   
   // Validate leaves
-  if rbTree.RBRoot.Node.Left.Left.Left.Left.Left != nil {
-    t.Error ("RBRoot.Node.Left.Left.Left.Left (node 3) must be leaf [Found left child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Left.Left.Left.Right != nil {
-    t.Error ("RBRoot.Node.Left.Left.Left.Left (node 3) must be leaf [Found right child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Left.Right.Left != nil {
-    t.Error ("rbTree.RBRoot.Node.Left.Left.Right (node 6) must be leaf [Found left child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Left.Right.Right != nil {
-    t.Error ("rbTree.RBRoot.Node.Left.Left.Right (node 6) must be leaf [Found right child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Right.Left.Left != nil {
-    t.Error ("rbTree.RBRoot.Node.Left.Right.Left (node 8) must be leaf [Found left child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Right.Left.Right != nil {
-    t.Error ("rbTree.RBRoot.Node.Left.Right.Left (node 8) must be leaf [Found right child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Right.Right.Left != nil {
-    t.Error ("rbTree.RBRoot.Node.Left.Right.Right (node 10) must be leaf [Found left child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Left.Right.Right.Right != nil {
-    t.Error ("rbTree.RBRoot.Node.Left.Right.Right (node 10) must be leaf [Found right child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Left.Left != nil {
-    t.Error ("rbTree.RBRoot.Node.Right.Right.Left (node 14) must be leaf [Found left child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Left.Right != nil {
-    t.Error ("rbTree.RBRoot.Node.Right.Right.Left (node 14) must be leaf [Found right child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Right.Left != nil {
-    t.Error ("rbTree.RBRoot.Node.Left.Right.Right (node 16) must be leaf [Found left child]", )
-  }
-  
-  if rbTree.RBRoot.Node.Right.Right.Right.Right != nil {
-    t.Error ("rbTree.RBRoot.Node.Left.Right.Right (node 16) must be leaf [Found right child]", )
-  }
+  // rbTree.RBRoot.Node.Left.Left.Left.Left
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Left.Left.Left)
+  // rbTree.RBRoot.Node.Left.Left.Right
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Left.Right)
+  // rbTree.RBRoot.Node.Left.Right.Left
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Right.Left)
+  // rbTree.RBRoot.Node.Left.Right.Right
+  assertLeaf(t, rbTree.RBRoot.Node.Left.Right.Right)
+  // rbTree.RBRoot.Node.Right.Right.Left
+  assertLeaf(t, rbTree.RBRoot.Node.Right.Right.Left)
+  // rbTree.RBRoot.Node.Right.Right.Right
+  assertLeaf(t, rbTree.RBRoot.Node.Right.Right.Right)
   
   // Validate single child
   if rbTree.RBRoot.Node.Left.Left.Left.Right != nil {
